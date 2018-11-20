@@ -32,6 +32,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   })
  
+  if (!$localStorage.x){
+    $localStorage.x=0
+  }
 
    $rootScope.Scan=function(){
       $rootScope.scan_values={}
@@ -41,14 +44,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         console.log(barcodeData.text)
         
         db.sqlBatch([
-          'CREATE TABLE IF NOT EXISTS test_table (Text)',
-        [ 'INSERT INTO test_table VALUES (?)', [barcodeData.text] ],
+          'CREATE TABLE IF NOT EXISTS test_table (x,Text)',
+        [ 'INSERT INTO test_table VALUES (?,?)', [$localStorage.x,barcodeData.text] ],
         ], function() {
         console.log('Populated database OK')
         }, function(error) {
         console.log('SQL batch ERROR: ' + error.message)
         })
         $rootScope.scan_values = barcodeData.text
+        $localStorage.x = $localStorage.x+1
        $ionicTabsDelegate.select(5)
       })
 
@@ -88,6 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             }
             console.log($localStorage.data)
             console.log($p)
+            $ionicTabsDelegate.select(2)
             $http.post("https://myqr.thaicrowd.com/api/v1/qr.save",$p).then(function(response){
               console.log(response)
               $scope.resp=response

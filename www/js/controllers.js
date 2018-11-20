@@ -42,6 +42,7 @@ angular.module('starter.controllers', ['ngCordova'])
            all_rows.push(rs.rows.item(i))
          }
         $scope.blogJson = JSON.stringify(all_rows)
+        $scope.blogJson = JSON.parse($scope.blogJson)
         console.log(all_rows)
         console.log($scope.blogJson)
     }, function(error) {
